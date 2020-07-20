@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+import csv
+from Bio import SeqIO
+import os
+
+
+rule all:
+    input:
+        os.path.join(config["outdir"],"global.annotated.tree")
+
+##### Modules #####
+include: "process_data_download.smk"
+include: "train_pangoLEARN.smk"
+include: "build_phylogeny.smk"
+include: "update_lineage_data.smk"
