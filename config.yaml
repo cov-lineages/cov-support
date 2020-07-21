@@ -4,4 +4,6 @@ website_dir: ~/Documents/cov-lineages-website
 summary_figures: ~/Documents/cov-support/data/summary-figures
 assignment_dir: ~/Documents/assignment/tree
 
+country_coordinates: cov_support/data/country_coordinates.csv
+metadata: cog_global_2020-06-26_metadata.csv
 data_dir: ~/Documents/pangoLEARN/pangoLEARN/data
