@@ -1,19 +1,11 @@
-rule populate_assignment_repo:
-    input:
-        "lineages.csv"
-    output:
-        "summary"
-    shell:
-        """
-        populate the directory of trees in the assignment repo
-        """
-
 rule make_summary_figures:
     input:
         metadata = 
         assignments = 
+    params:
+        outdir = config["summary_figures_dir"]
     output:
-        figures
+        
     shell:
         """
         chris_script.R
@@ -23,20 +15,33 @@ rule make_summary_table:
     input:
         metadata = 
         assignment = 
+        pmd = 
     output:
-        tables = 
+        table = os.path.join(config["data_dir"], "lineage_summary.tsv")
     shell:
         """
-        verity's script
+        verity_script.py
         """
 
 rule update_web_pages:
     input:
-        summary_figures = 
-        summary_tables = 
+        lineages_csv = os.path.join(config["data_dir"], "lineages.metadata.csv"),
+        summary_file = rules.make_summary_table.output.table,
+        lineages_notes = os.path.join(config["data_dir"], "lineages.descriptions.csv")
+    params:
+        assignment_dir = config["assignment_dir"],
+        website_dir = config["website_dir"],
+        summary_figures = config["summary_figures_dir"]
     output:
-        html
+        descriptions_file = os.path.join(config["website_dir"], "descriptions.md")
     shell:
         """
-        run script to update html pages per lineage
+        update_web_pages.py \
+            --assignment-dir {params.assignment_dir} \
+            --website-dir {params.website_dir} \
+            --summary-figures {params.summary_figures} \
+            --summary-file {input.summary_file} \
+            -i {input.lineages_csv} \
+            -n {input.lineages_notes} \
+            -o {output.descriptions_file}
         """
