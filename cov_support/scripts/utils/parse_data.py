@@ -4,6 +4,7 @@ from collections import Counter
 import imp
 import pandas as pd
 from epiweeks import Week,Year
+import csv
 
 classes = imp.load_source("class_defs", 'utils/class_defs.py')
 time = imp.load_source("time_functions", "utils/time_functions.py")
@@ -47,10 +48,6 @@ def sortkey2(taxon):
     return taxon.date_dt
 
 def make_objects(metadata_file):
-
-   
-    #epiweeks = time.make_epiweeks()
-
     lineage_objects = []
     taxa = []
     tax_dict = {}
@@ -59,16 +56,15 @@ def make_objects(metadata_file):
     lin_obj_dict = {}
 
     with open(metadata_file) as f:
-        next(f)
-        for l in f:
-           
-            toks = l.strip("\n").split(",")
-            
-            tax_name = toks[1]
-            country = toks[2]
-            date = toks[4]
-            epiweek = toks[5]
-            lin_string = toks[6]
+        reader = csv.DictReader(f)
+        data = [r for r in reader]
+        for seq in data:
+                       
+            tax_name = seq["name"]
+            country = seq["country"]
+            date = seq["sample date"]
+            epiweek = seq["epiweek"]
+            lin_string = seq["lineage"]
 
             metadata = [country, date, epiweek]
             
@@ -83,33 +79,38 @@ def make_objects(metadata_file):
 
 
     current_date = sorted(tax_with_dates, key=sortkey2, reverse = True)[0].date_dt
-    #current_week = Week.fromdate(current_date)
     
     for lin, lin_specific_taxa in lineages_to_taxa.items():
         l_o = classes.lineage(lin, lin_specific_taxa, current_date)
 
         lin_obj_dict[lin] = l_o
 
-
     lin_obj_dict = parse_travel_history(lin_obj_dict, tax_dict, metadata_file)
 
     return lin_obj_dict, taxa, current_date
 
+
 def get_recall_value(lin_obj_dict, recall_file):
 
     recall_dict = {}
+    count = 0
 
-    with open(recall_file) as f:
+    with open(recall_file,"r") as f:
         next(f)
         for l in f:
-            toks = l.strip("\n").split(",")
-            name = toks[0]
-            recall_value = toks[4]
+            l = l.rstrip("\n").lstrip(" ")
+            if l == "":
+                break
+            else:
+                toks = l.strip("\n").split()
+            
+                
+                name = toks[0]
+                recall_value = toks[1]
 
-            recall_dict[name] = recall_value
-
-    for key, value in lin_obj_dict.items():
-        value.recall_value = recall_dict[key]
+                # if name in lin_obj_dict.keys():
+                print(name)
+                lin_obj_dict[name].recall_value = recall_value
 
     return lin_obj_dict
 
@@ -131,7 +132,13 @@ def make_dataframe(lin_obj_dict):
         dataframe_dict["Number of taxa"].append(len(i.taxa))
         dataframe_dict["Days since last sampling"].append(i.last_sampled)
         dataframe_dict["Known Travel"].append(i.travel_history)
-        dataframe_dict["Recall value"].append(i.recall_value)
+        
+        try:
+            dataframe_dict["Recall value"].append(i.recall_value)
+        except AttributeError:
+            print(i.id)
+
+   
 
     dataframe = pd.DataFrame(dataframe_dict)
     
@@ -163,8 +170,8 @@ def make_dataframe(lin_obj_dict):
 
     dataframe["Known Travel"] = new_travels
 
-    dataframe['Lineage name'] = pd.Categorical(dataframe['Lineage name'],categories=['A', 'A.1', 'A.1.1', '*A.1.2', 'A.1.3', 'A.2', 'A.3', 'A.4', 'A.5', 'A.6', 'A.p7', 'B', 'B.1', 'B.1.45', 'B.1.49', 'B.1.1', 'B.1.1.1', 'B.1.1.2', 'B.1.1.3', 'B.1.1.4', 'B.1.1.5', 'B.1.1.6', 'B.1.1.7', 'B.1.1.8', 'B.1.1.9', 'B.1.1.10', 'B.1.1.p11', 'B.1.1.p12', 'B.1.1.13', 'B.1.1.14', 'B.1.1.p15', 'B.1.1.p16', 'B.1.1.17', 'B.1.1.18', 'B.1.1.p19', 'B.1.p2', 'B.1.3', 'B.1.5', 'B.1.5.1', 'B.1.5.2', 'B.1.5.3', 'B.1.5.4', 'B.1.5.5', 'B.1.5.6', 'B.1.6', '*B.1.7', 'B.1.8', 'B.1.p9', 'B.1.p11', 'B.1.12', 'B.1.13', 'B.1.p16', 'B.1.19', '*B.1.20', 'B.1.p21', 'B.1.22', 'B.1.23', 'B.1.p25', 'B.1.26', 'B.1.27', '*B.1.28', 'B.1.29', 'B.1.30', 'B.1.31', 'B.1.32', 'B.1.33', 'B.1.34', 'B.1.35', 'B.1.36', 'B.1.37', 'B.1.38', 'B.1.39', 'B.1.40', 'B.1.41', 'B.1.p42', 'B.1.43', 'B.1.44', '*B.1.47', '*B.1.48', '*B.1.51', '*B.1.52', 'B.1.64', 'B.1.66', 'B.1.67', 'B.1.p68', 'B.1.69', 'B.1.70', 'B.1.71', 'B.1.72', 'B.1.p73', 'B.2', 'B.2.1', 'B.2.2', '*B.2.3', 'B.2.4', 'B.2.5', 'B.2.6', 'B.2.7', 'B.3', 'B.4', 'B.5', 'B.6', 'B.7', '*B.8', 'B.9', 'B.10', 'B.p11', 'B.p12', 'B.13', 'B.14', 'B.15', 'B.16'],ordered=True)
-    dataframe.sort_values('Lineage name',ascending=True, inplace=True)
+    # dataframe['Lineage name'] = pd.Categorical(dataframe['Lineage name'],categories=['A', 'A.1', 'A.1.1', '*A.1.2', 'A.1.3', 'A.2', 'A.3', 'A.4', 'A.5', 'A.6', 'A.p7', 'B', 'B.1', 'B.1.45', 'B.1.49', 'B.1.1', 'B.1.1.1', 'B.1.1.2', 'B.1.1.3', 'B.1.1.4', 'B.1.1.5', 'B.1.1.6', 'B.1.1.7', 'B.1.1.8', 'B.1.1.9', 'B.1.1.10', 'B.1.1.p11', 'B.1.1.p12', 'B.1.1.13', 'B.1.1.14', 'B.1.1.p15', 'B.1.1.p16', 'B.1.1.17', 'B.1.1.18', 'B.1.1.p19', 'B.1.p2', 'B.1.3', 'B.1.5', 'B.1.5.1', 'B.1.5.2', 'B.1.5.3', 'B.1.5.4', 'B.1.5.5', 'B.1.5.6', 'B.1.6', '*B.1.7', 'B.1.8', 'B.1.p9', 'B.1.p11', 'B.1.12', 'B.1.13', 'B.1.p16', 'B.1.19', '*B.1.20', 'B.1.p21', 'B.1.22', 'B.1.23', 'B.1.p25', 'B.1.26', 'B.1.27', '*B.1.28', 'B.1.29', 'B.1.30', 'B.1.31', 'B.1.32', 'B.1.33', 'B.1.34', 'B.1.35', 'B.1.36', 'B.1.37', 'B.1.38', 'B.1.39', 'B.1.40', 'B.1.41', 'B.1.p42', 'B.1.43', 'B.1.44', '*B.1.47', '*B.1.48', '*B.1.51', '*B.1.52', 'B.1.64', 'B.1.66', 'B.1.67', 'B.1.p68', 'B.1.69', 'B.1.70', 'B.1.71', 'B.1.72', 'B.1.p73', 'B.2', 'B.2.1', 'B.2.2', '*B.2.3', 'B.2.4', 'B.2.5', 'B.2.6', 'B.2.7', 'B.3', 'B.4', 'B.5', 'B.6', 'B.7', '*B.8', 'B.9', 'B.10', 'B.p11', 'B.p12', 'B.13', 'B.14', 'B.15', 'B.16'],ordered=True)
+    # dataframe.sort_values('Lineage name',ascending=True, inplace=True)
     # dataframe.sort_values(by=["Lineage name"], ascending=True, inplace=True)
 
     with_links = []
