@@ -1,0 +1,7 @@
+### Config file containing paths to relevant directories etc
+
+website_dir: ~/Documents/cov-lineages-website
+summary_figures: ~/Documents/cov-support/data/summary-figures
+assignment_dir: ~/Documents/assignment/tree
+
+data_dir: ~/Documents/pangoLEARN/pangoLEARN/data
