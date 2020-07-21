@@ -37,11 +37,11 @@ rule update_web_pages:
     shell:
         """
         update_web_pages.py \
-            --assignment-dir {params.assignment_dir} \
-            --website-dir {params.website_dir} \
-            --summary-figures {params.summary_figures} \
-            --summary-file {input.summary_file} \
-            -i {input.lineages_csv} \
-            -n {input.lineages_notes} \
-            -o {output.descriptions_file}
+            --assignment-dir {params.assignment_dir:q} \
+            --website-dir {params.website_dir:q} \
+            --summary-figures {params.summary_figures:q} \
+            --summary-file {input.summary_file:q} \
+            -i {input.lineages_csv:q} \
+            -n {input.lineages_notes:q} \
+            -o {output.descriptions_file:q}
         """

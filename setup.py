@@ -4,17 +4,17 @@ import glob
 import os
 import pkg_resources
 
-from cov-support import __version__, _program
+from cov_support import __version__, _program
 
 
 setup(name='cov-support',
       version=__version__,
       packages=find_packages(),
-      scripts=["cov-support/scripts/Snakefile",
-      "cov-support/scripts/process_data_download.smk",
-      "cov-support/scripts/build_cov-support.smk",
-      "cov-support/scripts/train_pangoLEARN.smk",
-      "cov-support/scripts/update_lineage_data.smk"],
+      scripts=["cov_support/scripts/Snakefile",
+      "cov_support/scripts/process_data_download.smk",
+      "cov_support/scripts/build_phylogeny.smk",
+      "cov_support/scripts/train_pangoLEARN.smk",
+      "cov_support/scripts/update_lineage_data.smk"],
       install_requires=[
             "biopython>=1.70",
             "dendropy>=4.4.0",
@@ -30,7 +30,7 @@ setup(name='cov-support',
         author_email='aine.otoole@ed.ac.uk',
         entry_points="""
         [console_scripts]
-        {program} = cov-support.command:main
+        {program} = cov_support.command:main
         """.format(program = _program),
         include_package_data=True,
         keywords=[],
