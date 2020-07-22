@@ -4,8 +4,9 @@ from tabulate import tabulate
 import imp
 import pandas as pd
 import argparse
+import os
 
-def make_table(metadata, recall_file):
+def make_table(metadata, recall_file, datadir):
 
     parse = imp.load_source('parse_data', 'utils/parse_data.py')
 
@@ -15,7 +16,7 @@ def make_table(metadata, recall_file):
 
     df = parse.make_dataframe(lin_obj_dict)
 
-    df.to_csv("summary_files/lineage_summary.tsv", sep="\t")
+    df.to_csv(os.path.join(datadir, "lineage_summary.tsv"), sep="\t")
 
 def main():
     
@@ -23,10 +24,11 @@ def main():
 
     parser.add_argument("-m","--metadata", required=True, help="metadata", dest = "metadata")
     parser.add_argument("-r", "--recall-file", required=True, help="recall file", dest="recall")
+    parser.add_argument("-d", "--datadir", required=True, help="output directory", dest="datadir")
 
     args = parser.parse_args()
 
-    make_table(args.metadata, args.recall)
+    make_table(args.metadata, args.recall, args.datadir)
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,167 @@
+Lineage name	Most common countries	Date range	Number of taxa	Days since last sampling	Known Travel	Recall value
+B.1	USA (33%), UK (33%), Australia (5%)	February 03 to June 21	12883	1	United_Arab_Emirates to Taiwan (1), UK to South_Africa, China, Iceland (17), Iran to Lebanon, Finland, Turkey (3), Spain to Iceland (6), Austria to China, Taiwan, Iceland (43), Italy to Czech_Republic, Brazil, China, Finland, Iceland, Belgium (20), France to Taiwan, Iceland, Turkey (4), Switzerland to Iceland (5), Germany to Iceland (2), Netherlands to South_Africa, Iceland (4), USA to China, Taiwan, Iceland, Costa_Rica (7), Egypt to Lebanon, Taiwan (4), Czech_Republic;USA to Taiwan (1), Czech_Republic to Taiwan (1), Poland to Taiwan (1), Canada to China (1), Argentina to Mexico (1)	0.962
+B.2.1	UK (89%), Australia (3%), USA (2%)	February 09 to June 02	1618	20	UK to Iceland (1)	0.992
+B.1.8	Netherlands (71%), Iceland (6%), Denmark (3%)	March 04 to May 26	157	27	Austria to Iceland (10)	0.909
+B.6	India (41%), Singapore (34%), Australia (9%)	March 04 to June 06	629	16	Philippines to Taiwan (1), Pakistan to China (1)	0.987
+B.1.1	UK (71%), USA (3%), Portugal (2%)	February 23 to June 14	9635	8	Italy to Chile, Brazil, Thailand, New_Zealand, Nigeria, Iceland, Mexico (37), Finland to Iceland (1), Spain to Czech_Republic, Taiwan, Iceland (4), Austria;Spain;Germany;Italy to Brazil (1), Austria to Iceland (4), Mexico to Argentina (1), Switzerland to Iceland (1), Saudia_Arabia to Turkey (1), France to Argentina (1), UK to Lebanon, China, Iceland, Kuwait (8), Germany to Iceland (1), USA to Taiwan, Brazil (3), Hungary to China (3), Maldives to Germany (1)	0.984
+B.1.23	Australia (95%), New_Zealand (4%), Portugal (1%)	March 18 to April 30	104	53		1.000
+B.4	Australia (37%), UK (10%), Kazakhstan (7%)	January 18 to May 13	362	40	Iran to Turkey, Kuwait, Lebanon, Canada, Pakistan, Germany, Australia, New_Zealand (13), Turkey to Taiwan (1), UK to Lebanon (1), Italy to China (1)	1.000
+A.1	USA (88%), Australia (7%), Canada (2%)	February 22 to May 13	1504	40	USA to Iceland (1)	0.992
+B.1.21	USA (99%), Iceland (0%), Denmark (0%)	March 08 to May 30	391	23		0.963
+B.1.41	USA (100%)	March 19 to April 15	41	68		1.000
+B	UK (37%), China (21%), USA (15%)	December 24 to June 02	1955	20	China to Cambodia, Singapore, Taiwan, India, Canada, Thailand (8), Italy to Finland, China (2), UK to South_Africa, China, Iceland (6), Switzerland to Iceland (1), Netherlands to Ecuador, Iceland (2), Austria to Iceland (1), USA to China, Iceland (4), Japan to Taiwan (1), Saudia_Arabia to Turkey (1), Indonesia to Taiwan (1), Greece to China (1), Germany to China (1), Iran to China (1), France to China (2), Mexico to China (1), Spain to China, Mexico (2)	0.959
+B.1.5	UK (39%), Spain (37%), USA (3%)	January 24 to June 22	1731	0	Spain to Argentina, China, Iceland (3), Israel to Argentina (1), Brazil to Argentina (1), Saudia_Arabia to Turkey (2), Croatia to Iceland (1), Portugal to Taiwan (1)	0.953
+B.1.2	USA (96%), Australia (2%), Canada (1%)	March 08 to June 08	785	14		0.971
+B.2	UK (60%), USA (7%), Netherlands (5%)	January 21 to May 28	1446	25	Italy to Iceland, Brazil (2), UK to China, Iceland (3), China to Italy, France (2), Germany to Iceland (1), USA to Kuwait (1)	0.986
+B.11	Netherlands (92%), Taiwan (4%), UK (4%)	March 02 to May 03	24	50		1.000
+B.1.110	Chile (51%), USA (46%), Australia (4%)	March 02 to May 08	57	45		1.000
+B.1.1.33	Brazil (77%), USA (9%), Chile (5%)	March 01 to April 28	172	55		1.000
+B.1.43	USA (99%), Australia (1%)	March 07 to June 07	158	15		0.979
+B.1.25	Australia (100%)	March 19 to March 25	15	89		0.000
+B.1.3	USA (83%), Israel (8%), ISRAEL (4%)	March 05 to May 17	374	36		1.000
+A.2	Spain (55%), UK (19%), Australia (16%)	February 26 to June 03	863	19	Italy to Spain, Chile (2), Spain to China, Brazil (2)	1.000
+B.1.1.19	Australia (100%)	March 23 to March 26	6	88		0.000
+A	China (49%), USA (8%), India (5%)	January 05 to June 08	453	14	China to Taiwan, India, Vietnam, Australia, Belgium (6), Saudia_Arabia to Turkey (2), USA to New_Zealand (1), Germany to China (3)	0.971
+B.21	UK (90%), Australia (8%), Greece (3%)	March 14 to May 06	39	47		1.000
+B.1.31	Australia (100%)	March 21 to April 04	15	79		1.000
+B.1.29	USA (97%), Australia (3%)	March 15 to June 12	35	10		1.000
+B.1.26	USA (50%), New_Zealand (49%), Australia (1%)	March 15 to June 13	103	9		1.000
+B.3	UK (80%), Belgium (4%), Denmark (3%)	February 23 to May 27	904	26	UK to Iceland, Brazil (2), Austria to Iceland (1)	0.991
+B.1.38	USA (100%)	March 17 to April 27	20	56		1.000
+B.2.2	UK (81%), Australia (5%), USA (4%)	February 25 to May 24	230	29	Switzerland to Iceland (1), Spain to Iceland (1), Ireland to Taiwan (1)	1.000
+A.6	Thailand (99%), Singapore (1%)	January 23 to April 07	85	76		1.000
+B.18	UK (82%), Iceland (18%)	March 16 to May 15	17	38	UK to Iceland (1)	1.000
+B.1.102	Iceland (98%), Spain (2%)	March 12 to March 28	95	86	Argentina to Iceland (1)	1.000
+B.1.1.17	Iceland (100%)	March 06 to March 28	29	86	Italy to Iceland (1)	1.000
+B.2.7	Iceland (100%)	March 12 to March 29	47	85		1.000
+A.3	USA (77%), Australia (15%), UK (4%)	January 28 to May 11	305	42	USA to Taiwan, New_Zealand (2)	0.989
+B.1.1.1	UK (92%), Belgium (1%), Netherlands (1%)	March 02 to June 13	1726	9	Austria to Iceland (5), UK to Argentina, Iceland (3), Peru;Argentina to Costa_Rica (1)	0.998
+A.5	Spain (54%), UK (20%), Uruguay (8%)	February 23 to May 07	238	46		0.979
+B.1.74	Spain (80%), Portugal (15%), Chile (3%)	March 01 to March 31	60	83		1.000
+B.9	UK (80%), Australia (15%), South_Africa (2%)	March 12 to May 09	46	44		1.000
+A.1.3	Australia (91%), Taiwan (9%)	March 19 to April 02	11	81		0.000
+B.2.4	UK (54%), New_Zealand (22%), Australia (21%)	March 03 to May 13	116	40		1.000
+B.1.1.7	UK (91%), Australia (3%), Iceland (3%)	March 07 to May 27	111	26	USA to Iceland (1)	1.000
+B.5	Japan (84%), USA (11%), Australia (5%)	February 10 to February 24	19	119		1.000
+B.1.39	Denmark (90%), UK (6%), Australia (1%)	March 13 to April 28	69	55		0.938
+B.1.12	Luxembourg (44%), Belgium (41%), UK (13%)	March 04 to June 01	61	21		0.933
+B.1.75	UK (98%), Mexico (1%), Luxembourg (1%)	March 06 to May 13	140	40		1.000
+B.1.42	Denmark (90%), Sweden (5%), Iceland (4%)	March 03 to April 28	127	55	Faroe_Islands to Iceland (1), UK to Iceland (1), Denmark to Iceland (2)	0.931
+B.1.9	Belgium (31%), Netherlands (30%), UK (24%)	March 14 to May 14	108	39	Saudia_Arabia to Turkey (1)	1.000
+B.1.6	Belgium (79%), DRC (12%), UK (6%)	March 11 to April 18	34	65		1.000
+B.1.111	Colombia (48%), UK (38%), USA (7%)	March 07 to May 06	29	47		1.000
+B.1.1.10	UK (83%), Netherlands (8%), USA (4%)	March 08 to May 22	221	31	USA to Iceland (1)	0.864
+A.1.1	Iceland (93%), USA (7%)	March 11 to March 20	15	94	USA to Iceland (10)	1.000
+B.1.1.5	UK (50%), Belgium (33%), Iceland (12%)	March 16 to May 14	42	39		1.000
+B.1.11	UK (97%), Australia (1%), Iceland (0%)	March 07 to June 16	664	6	France to Iceland (1), UK to Iceland (1), Austria to Iceland (1)	0.974
+B.2.6	UK (72%), Australia (11%), Iceland (6%)	March 05 to May 01	53	52		1.000
+B.1.123	USA (100%)	March 16 to April 27	23	56		1.000
+B.1.37	USA (100%)	March 10 to May 12	37	41		1.000
+B.1.108	USA (100%)	March 14 to April 27	34	56		1.000
+B.1.22	Netherlands (90%), Australia (4%), Belgium (1%)	March 09 to May 22	236	31		1.000
+B.1.19	USA (100%)	March 19 to April 17	30	66		1.000
+A.4	USA (100%)	March 11 to April 10	32	73		1.000
+B.1.36	UK (32%), India (29%), Saudi_Arabia (23%)	March 10 to June 15	296	7	Saudia_Arabia to Turkey (3)	0.975
+B.1.113	India (78%), Saudi_Arabia (7%), Turkey (6%)	March 15 to June 08	111	14	Saudia_Arabia to Turkey (3), Iran to Turkey (1)	1.000
+B.1.104	UK (89%), USA (7%), Singapore (3%)	March 02 to May 05	149	48		1.000
+B.1.1.15	Luxembourg (41%), UK (38%), Portugal (21%)	March 09 to April 28	29	55		0.000
+B.1.94	Luxembourg (94%), Switzerland (6%)	March 15 to April 24	18	59		1.000
+B.1.1.28	Brazil (85%), UK (7%), China (4%)	March 05 to May 08	54	45	Italy to Brazil (1)	0.909
+B.1.1.21	Australia (100%)	April 07 to April 17	13	66		0.000
+B.1.32	Sweden (100%)	March 04 to March 10	18	104		1.000
+B.1.13	UK (94%), Australia (4%), Poland (0%)	March 09 to May 15	286	38		0.987
+B.2.10	South_Korea (92%), USA (8%)	February 18 to February 29	24	114		1.000
+B.2.8	Hong_Kong (97%), Canada (3%)	January 30 to March 08	33	106		1.000
+B.1.5.9	UK (100%), Sweden (0%)	March 12 to June 09	249	13		1.000
+B.1.68	USA (100%)	March 19 to April 22	60	61		1.000
+B.1.5.3	UK (91%), Australia (3%), Sweden (3%)	March 18 to April 16	33	67	Belgium;United_Kingdom to Taiwan (1)	1.000
+B.1.114	Canada (96%), USA (4%)	March 08 to April 25	26	58		1.000
+B.1.1.6	Austria (100%)	February 26 to March 25	43	89		0.929
+B.17	USA (100%)	March 20 to April 24	15	59		1.000
+B.1.118	Denmark (100%)	March 19 to April 14	21	69		1.000
+B.1.107	Denmark (100%)	March 18 to April 28	58	55		0.923
+B.22	Denmark (100%)	March 15 to April 04	8	79		0.000
+B.1.5.8	USA (94%), Denmark (3%), Belgium (3%)	March 13 to April 09	31	74		1.000
+B.1.121	Australia (100%)	April 09 to May 26	69	27		1.000
+B.1.88	UK (95%), Australia (2%), Romania (2%)	March 12 to June 04	42	18		1.000
+B.1.84	DRC (95%), Spain (5%)	March 17 to May 22	20	31		1.000
+B.1.96	Netherlands (95%), USA (2%), Norway (2%)	March 14 to May 11	41	42		1.000
+B.1.5.2	Netherlands (96%), UK (3%), Belgium (1%)	March 14 to April 21	77	62		1.000
+B.1.78	Netherlands (98%), UK (2%)	March 16 to May 19	48	34		1.000
+B.1.83	Belgium (97%), USA (3%)	March 23 to April 09	30	74		1.000
+B.1.106	South_Africa (98%), UK (2%)	March 28 to June 04	47	18		0.900
+B.1.124	USA (100%)	March 26 to May 07	69	46		1.000
+B.1.1.26	USA (100%)	April 02 to May 06	45	47		1.000
+B.1.109	Luxembourg (100%)	April 12 to May 19	12	34		1.000
+B.1.80	India (91%), Luxembourg (4%), Australia (4%)	March 21 to June 05	56	17		0.938
+B.1.112	USA (100%)	April 07 to April 21	48	62		1.000
+B.14	USA (100%)	March 16 to May 07	46	46		1.000
+B.1.87	India (75%), China (25%)	March 12 to April 20	8	63	Spain to China (1), Norway to China (1)	1.000
+B.13	USA (100%)	April 03 to April 17	19	66		1.000
+B.20	USA (100%)	March 31 to May 12	28	41		1.000
+B.19	USA (100%)	March 29 to April 26	25	57		1.000
+A.9	India (100%)	April 03 to May 13	7	40		0.000
+B.1.85	USA (100%)	April 13 to April 22	12	61		1.000
+B.1.1.25	Bangladesh (73%), Australia (27%)	April 08 to June 01	41	21		0.846
+B.12	Japan (100%)	March 27 to April 15	5	68		0.000
+B.1.103	USA (97%), Spain (3%)	March 21 to May 19	37	34		1.000
+B.1.115	Israel (93%), ISRAEL (7%)	March 17 to April 11	14	72		1.000
+B.1.1.32	India (100%)	April 04 to June 02	52	20		1.000
+B.1.1.23	Bangladesh (92%), Australia (8%)	April 17 to June 02	13	20		1.000
+A.7	India (100%)	March 22 to May 10	23	43		1.000
+B.1.119	USA (100%)	April 27 to May 20	33	33		1.000
+B.1.91	Portugal (100%)	March 12 to May 02	88	51		1.000
+B.1.1.24	Portugal (100%)	April 17 to April 24	18	59		1.000
+B.1.95	India (100%)	April 20 to May 14	6	39		0.000
+B.1.1.27	Oman (100%)	March 21 to May 09	13	44		1.000
+B.1.1.8	India (100%)	May 11 to June 02	39	20		1.000
+B.1.1.31	Netherlands (96%), Canada (4%)	March 26 to May 26	23	27		1.000
+B.1.116	USA (100%)	May 01 to May 21	57	32		1.000
+B.1.79	UK (97%), India (1%), Cyprus (1%)	March 28 to June 03	78	19		1.000
+B.1.8.1	South_Africa (100%)	April 08 to April 09	14	74		1.000
+B.1.125	South_Africa (100%)	March 29 to April 09	23	74		1.000
+B.1.67	UK (94%), Ecuador (6%)	March 25 to April 17	17	66		1.000
+B.1.35	UK (99%), USA (1%)	March 07 to June 06	166	16		0.944
+B.1.98	UK (100%)	March 12 to May 10	45	43		1.000
+B.1.77	UK (100%)	March 20 to May 31	101	22		0.957
+B.1.30	UK (100%)	March 17 to May 04	65	49		0.941
+B.1.5.10	UK (100%)	March 21 to June 03	50	19		1.000
+B.1.89	UK (100%)	March 22 to May 21	74	32		0.900
+B.1.120	UK (100%)	April 14 to June 11	103	11		1.000
+B.1.44	UK (100%)	March 25 to June 02	97	20		1.000
+B.1.122	UK (100%)	April 02 to May 20	19	33		1.000
+B.1.5.6	UK (100%)	March 19 to May 05	39	48		1.000
+B.1.101	UK (100%)	March 22 to June 01	41	21		1.000
+B.1.70	UK (100%)	March 13 to April 24	28	59		1.000
+B.1.93	UK (100%)	March 19 to June 03	521	19		1.000
+B.1.90	UK (100%)	March 23 to May 16	31	37		1.000
+B.1.40	UK (100%)	March 18 to May 23	31	30		1.000
+B.1.100	UK (100%)	April 13 to May 19	20	34		1.000
+B.1.82	UK (100%)	May 25 to June 15	21	7		1.000
+B.1.5.5	UK (100%)	April 08 to June 02	73	20		1.000
+B.2.9	UK (100%)	March 03 to April 18	31	65		0.875
+B.1.1.14	UK (100%)	April 16 to June 02	39	20		1.000
+B.1.1.4	UK (100%)	March 26 to May 22	53	31		1.000
+B.1.117	UK (100%)	March 30 to May 15	56	38		1.000
+B.1.81	UK (100%)	March 18 to May 07	19	46		1.000
+B.1.99	UK (100%)	March 21 to May 11	44	42		1.000
+B.1.72	UK (100%)	March 16 to April 24	41	59		1.000
+B.1.86	UK (100%)	March 24 to June 02	21	20		1.000
+B.16	UK (100%)	March 13 to May 26	168	27		1.000
+B.1.1.29	UK (100%)	April 08 to May 30	57	23		1.000
+B.1.1.30	UK (100%)	March 30 to June 04	93	18		0.955
+B.1.1.2	UK (100%)	March 20 to June 03	288	19		1.000
+B.1.1.16	UK (100%)	April 03 to May 29	34	24		1.000
+B.1.1.20	UK (100%)	March 21 to May 06	11	47		1.000
+B.1.71	UK (100%)	March 18 to May 23	29	30		1.000
+B.1.1.3	UK (100%)	March 18 to June 03	84	19		1.000
+B.1.76	UK (100%)	February 24 to June 04	60	18		1.000
+B.10	UK (100%)	March 13 to May 04	82	49		1.000
+B.1.105	UK (100%)	March 21 to May 31	88	22		1.000
+B.1.69	UK (100%)	March 06 to March 30	18	84		1.000
+B.1.66	UK (100%)	March 29 to May 20	31	33		1.000
+B.1.97	UK (100%)	March 24 to May 05	35	48		1.000
+B.1.1.13	UK (100%)	March 28 to April 15	16	68		1.000
+B.15	UK (100%)	March 12 to April 14	34	69		1.000
+B.1.34	UK (100%)	March 17 to April 26	20	57		1.000
+B.1.1.12	UK (100%)	March 21 to April 22	19	61		1.000

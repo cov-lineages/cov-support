@@ -109,7 +109,6 @@ def get_recall_value(lin_obj_dict, recall_file):
                 recall_value = toks[1]
 
                 # if name in lin_obj_dict.keys():
-                print(name)
                 lin_obj_dict[name].recall_value = recall_value
 
     return lin_obj_dict
@@ -124,21 +123,14 @@ def make_dataframe(lin_obj_dict):
     dataframe_dict = defaultdict(list)
 
     for i in lin_obj_dict.values():
-        #print(i.id, i.mrd, i.oldest, i.main_locs)
-        
-        dataframe_dict["Lineage name"].append(i.id)
-        dataframe_dict["Most common countries"].append(i.mains_plus_freqs)
-        dataframe_dict["Date range"].append(i.pretty_oldest + " to " + i.pretty_mrd)
-        dataframe_dict["Number of taxa"].append(len(i.taxa))
-        dataframe_dict["Days since last sampling"].append(i.last_sampled)
-        dataframe_dict["Known Travel"].append(i.travel_history)
-        
-        try:
+        if i.id != "B.1.1.18": #will need removing for next time
+            dataframe_dict["Lineage name"].append(i.id)
+            dataframe_dict["Most common countries"].append(i.mains_plus_freqs)
+            dataframe_dict["Date range"].append(i.pretty_oldest + " to " + i.pretty_mrd)
+            dataframe_dict["Number of taxa"].append(len(i.taxa))
+            dataframe_dict["Days since last sampling"].append(i.last_sampled)
+            dataframe_dict["Known Travel"].append(i.travel_history)
             dataframe_dict["Recall value"].append(i.recall_value)
-        except AttributeError:
-            print(i.id)
-
-   
 
     dataframe = pd.DataFrame(dataframe_dict)
     
@@ -162,9 +154,11 @@ def make_dataframe(lin_obj_dict):
         lin = lin_obj_dict[row["Lineage name"]]
         for key, st in mydict.items():
             counts = lin.travel_counts[key]
-            subset.append(key + " to " + ", ".join(i for i in st) + ' (' + str(counts) + ")<br/>")
+            # subset.append(key + " to " + ", ".join(i for i in st) + ' (' + str(counts) + ")<br/>")
+            subset.append(key + " to " + ", ".join(i for i in st) + ' (' + str(counts) + ")")
         
-        subset = str(subset).strip("[").strip("]").replace("'", "").replace("<br/>,","<br/>")
+        # subset = str(subset).strip("[").strip("]").replace("'", "").replace("<br/>,","<br/>")
+        subset = str(subset).strip("[").strip("]").replace("'", "")
     
         new_travels.append(subset)
 
@@ -174,11 +168,11 @@ def make_dataframe(lin_obj_dict):
     # dataframe.sort_values('Lineage name',ascending=True, inplace=True)
     # dataframe.sort_values(by=["Lineage name"], ascending=True, inplace=True)
 
-    with_links = []
-    for i in dataframe["Lineage name"]:
-        name_plus_link = "[" + i + "]" + "(#" + i + ")"
-        with_links.append(name_plus_link)
-    dataframe["Lineage name"] = with_links
+    # with_links = []
+    # for i in dataframe["Lineage name"]:
+    #     name_plus_link = "[" + i + "]" + "(#" + i + ")"
+    #     with_links.append(name_plus_link)
+    # dataframe["Lineage name"] = with_links
 
    
     dataframe.set_index("Lineage name", inplace=True)
