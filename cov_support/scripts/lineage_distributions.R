@@ -54,7 +54,7 @@ clusters$country[grep("Romania", clusters$country)] <- "Romania"
 uniqueLineages <- unique(clusters$lineage)
 
 #Convert the collection dates to dates
-clusters$Date <- as.Date(clusters$sample_date)
+clusters$Date <- as.Date(clusters$sample.date)
 
 #Plot the world map onto which lineage locations will be plotted
 worldMap <- map_data('world')
