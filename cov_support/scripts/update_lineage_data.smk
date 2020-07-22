@@ -14,14 +14,17 @@ rule make_summary_figures:
 
 rule make_summary_table:
     input:
-        metadata = 
-        assignment = 
-        pmd = 
+        metadata = config["metadata"]
+        recall = config["recall_file"]
+        data_dir = config["data_dir"]
     output:
         table = os.path.join(config["data_dir"], "lineage_summary.tsv")
     shell:
         """
-        verity_script.py
+        python make_summary_table.py \
+        -m {params.metadata:q} \
+        -r {params.recall:q} \
+        -d {params.data_dir:q}
         """
 
 rule update_web_pages:
