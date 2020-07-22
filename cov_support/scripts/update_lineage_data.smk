@@ -1,14 +1,15 @@
 rule make_summary_figures:
     input:
-        metadata = 
+        metadata = config["metadata"],
         assignments = 
+        country_coordinates = config["country_coordinates"]
     params:
         outdir = config["summary_figures_dir"]
     output:
         
     shell:
         """
-        chris_script.R
+        RScript lineage_distributions.R {input.metadata} {input.country_coordinates}
         """
 
 rule make_summary_table:
