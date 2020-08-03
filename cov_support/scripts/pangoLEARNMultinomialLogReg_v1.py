@@ -15,14 +15,14 @@ lineage_file = sys.argv[1]
 # file with sequences
 sequence_file = sys.argv[2]
 # how much of the data will be used for testing, instead of training
-testingPercentage = sys.argv[3]
+testingPercentage = float(sys.argv[3])
 
 dataList = []
 
 snpDict = dict()
 keepDict = dict()
 # dict for lookup efficiency
-indiciesToRemove = dict()
+indiciesToKeep = dict()
 
 
 # small class for storing/comparing vector objects
@@ -137,14 +137,14 @@ def findColumnsWithoutSNPs():
 				keep = True
 
 		# otherwise, save it to remove this index from the data later
-		if not keep:
-			indiciesToRemove[index] = True
+		if keep:
+			indiciesToKeep[index] = True
 
 
 # remove columns from the data list which don't have any SNPs. We do this because
 # these columns won't be relevant for a logistic regression which is trying to use
 # differences between sequences to assign lineages
-def removeIndices(indiciesToRemove):
+def removeOtherIndices(indiciesToKeep):
 	# instantiate the final list
 	finalList = []
 
@@ -163,31 +163,24 @@ def removeIndices(indiciesToRemove):
 		# initialize the finalLine
 		finalLine = []
 
-		# for each index in the line
-		for index in range(len(line)):
-			# if its the first index, then that's the lineage assignment, so keep it
+		for index in indiciesToKeep:
 			if index == 0:
-				finalLine.append(line[index])
-			# otherwise only keep it if its not in indicesToRemove
-			elif index not in indiciesToRemove:
+				# if its the first index, then that's the lineage assignment, so keep it
+				finalLine.append(line[0])
+			else:
+				# otherwise keep everything at the indices in indicesToKeep
 				finalLine.extend(line[index].vector)
 
 		# save the finalLine to the finalList
 		finalList.append(finalLine)
 
 	# getting the indices to remove as a list so we can sort it
-	indicies = list(indiciesToRemove.keys())
+	indicies = list(indiciesToKeep.keys())
 	# sorting the list
 	indicies.sort()
 
-	# for each index (after sorting them backwards so we can remove them from highest to 
-	# lowest to prevent index offset problems)
-	for i in reversed(indicies):
-		# remove the relevant header
-		headers.pop(i)
-
 	# then, for each remaining header
-	for i in headers:
+	for i in indicies:
 		# the first one is just "lineage" since we know its the lineage assignment
 		if i == 0:
 			finalHeaders.append("lineage")
@@ -208,7 +201,7 @@ print("processing snps, formatting data " + datetime.now().strftime("%m/%d/%Y, %
 
 findColumnsWithoutSNPs()
 
-dataList, headers = removeIndices(indiciesToRemove)
+dataList, headers = removeOtherIndices(indiciesToKeep)
 
 pima = pd.DataFrame(dataList, columns=headers)
 
