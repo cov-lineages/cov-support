@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from pangolin import __version__
+from cov_support import __version__
 import argparse
 import os.path
 import snakemake
@@ -8,8 +8,6 @@ from tempfile import gettempdir
 import tempfile
 import pprint
 import json
-import lineages
-import pangoLEARN
 
 import pkg_resources
 from Bio import SeqIO
@@ -24,12 +22,9 @@ cwd = os.getcwd()
 def main(sysargs = sys.argv[1:]):
 
     parser = argparse.ArgumentParser(prog = _program, 
-    description='pangolin: Phylogenetic Assignment of Named Global Outbreak LINeages', 
-    usage='''pangolin <query> [options]''')
+    description='cov-support: update guide tree or train a new model. Update webpages. Do all sorts of support related tasks')
 
-    parser.add_argument('query', help='Query fasta file of sequences to analyse.')
     parser.add_argument('-o','--outdir', action="store",help="Output directory. Default: current working directory")
-    parser.add_argument('--outfile', action="store",help="Optional output file name. Default: lineage_report.csv")
     parser.add_argument('-d', '--data', action='store',help="Data directory minimally containing alignment.fasta, global.tree metadata.csv and lineages.csv")
     parser.add_argument('--pangolin-prep', action="store_true",help="Run legacy pangolin prep pipeline",dest="pangolin_prep")
     parser.add_argument('--num-taxa', action="store",type=int,default=5,help="Number of taxa in guide tree",dest="num_taxa")
@@ -79,6 +74,9 @@ def main(sysargs = sys.argv[1:]):
             sys.stderr.write(f'Error: please specify data directory')
             sys.exit(-1)
         num_taxa = args.num_taxa
+    elif args.update_web:
+        
+
 
     outdir = ''
     if args.outdir:
@@ -118,10 +116,10 @@ def main(sysargs = sys.argv[1:]):
     config = {
         "lineages":lineages,
         "metadata":metadata,
-        "alignment":alignment,
-        "tree":tree,
+        "fasta":alignment,
+        "global_tree":tree,
+        
         "outdir":outdir,
-        "outfile":outfile,
         "tempdir":tempdir,
         "num_taxa":num_taxa
         }
@@ -131,8 +129,8 @@ def main(sysargs = sys.argv[1:]):
 
 
 
-    reference_fasta = pkg_resources.resource_filename('pangolin', 'data/reference.fasta')
-    config["reference_fasta"] = reference_fasta
+    to_include = pkg_resources.resource_filename('cov_support', 'data/to_include.csv')
+    config["to_include"] = to_include
 
 
     if args.verbose:

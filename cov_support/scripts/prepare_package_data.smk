@@ -12,37 +12,6 @@ rule all:
         os.path.join(config["outdir"] , "anonymised.aln.safe.fasta.treefile"),
         os.path.join(config["outdir"] , "anonymised.encrypted.aln.safe.fasta")
 
-rule phylotype_to_metadata:
-    input:
-        phylotype = config["phylotypes"],
-        metadata = config["metadata"]
-    output:
-        os.path.join(config["outdir"], "metadata_with_phylotypes.csv")
-    run:
-        phylotype_dict = {}
-        with open(input.phylotype,"r") as f:
-            for l in f:
-                l = l.rstrip("\n")
-                name,phylotype=l.split(',')
-                phylotype_dict[name]=phylotype
-            
-        with open(input.metadata,newline="") as f:
-            reader = csv.DictReader(f)
-
-            header = reader.fieldnames
-            header.append("phylotype")
-            with open(output[0], "w") as fw:
-                writer = csv.DictWriter(fw, fieldnames=header,lineterminator='\n')
-                writer.writeheader()
-                for row in reader:
-                    if row["sequence_name"] in phylotype_dict:
-                        new_row = row
-                        name = new_row["sequence_name"]
-                        phylotype = phylotype_dict[name]
-                        new_row["phylotype"] = phylotype
-
-                        writer.writerow(new_row)
-
 rule seqs_with_lineage:
     input:
         aln = config["fasta"],
@@ -93,7 +62,7 @@ rule find_basal_polytomies:
     input:
         polytomies = rules.find_polytomies.output.outfile,
         lineages = config["lineages"],
-        metadata = os.path.join(config["outdir"], "metadata_with_phylotypes.csv")
+        metadata = config["metadata"]
     output:
         outfile = os.path.join(config["outdir"] , "basal_polytomy_taxa.csv")
     shell:
@@ -137,7 +106,7 @@ rule extract_representative_sequences:
     input:
         aln = rules.seqs_with_lineage.output.fasta,
         lineages = config["lineages"],
-        metadata = os.path.join(config["outdir"], "metadata_with_phylotypes.csv"),
+        metadata = config["metadata"],
         mask = rules.find_representatives.output.mask,
         representatives = rules.find_representatives.output.reps
     output:
