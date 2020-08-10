@@ -113,6 +113,8 @@ rule find_representatives:
         snps = os.path.join(config["outdir"] , "all_snps.csv"), #config["all_snps"],
         include = config["to_include"],
         polytomies = rules.find_basal_polytomies.output.outfile
+    params:
+        num_taxa = config["num_taxa"]
     output:
         reps = os.path.join(config["outdir"] , "representative_seqs.csv"),
         defining = os.path.join(config["outdir"] , "defining_snps.csv"),
@@ -128,6 +130,7 @@ rule find_representatives:
                 --representative-seqs-out {output.reps:q} \
                 --defining-snps-out {output.defining:q} \
                 --mask-out {output.mask:q} \
+                --num-taxa {params.num_taxa}
             """
 
 rule extract_representative_sequences:
