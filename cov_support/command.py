@@ -26,9 +26,14 @@ def main(sysargs = sys.argv[1:]):
 
     parser.add_argument('-o','--outdir', action="store",help="Output directory. Default: current working directory")
     parser.add_argument('-d', '--data', action='store',help="Data directory minimally containing alignment.fasta, global.tree metadata.csv and lineages.csv")
+    
     parser.add_argument('--pangolin-prep', action="store_true",help="Run legacy pangolin prep pipeline",dest="pangolin_prep")
     parser.add_argument('--num-taxa', action="store",type=int,default=5,help="Number of taxa in guide tree",dest="num_taxa")
+    
     parser.add_argument('--update-web', action="store_true",help="Run website update pipeline",dest="update_web")    
+    parser.add_argument('--website-dir', action="store",help="Path to website repo",dest="website_dir")    
+    parser.add_argument('--assignment-dir', action="store",help="Path to assignment repo",dest="assignment_dir")    
+
     parser.add_argument('-n', '--dry-run', action='store_true',help="Go through the motions but don't actually run")
     parser.add_argument('--tempdir',action="store",help="Specify where you want the temp stuff to go. Default: $TMPDIR")
     parser.add_argument("--no-temp",action="store_true",help="Output all intermediate files, for dev purposes.")
@@ -55,6 +60,14 @@ def main(sysargs = sys.argv[1:]):
     else:
         print("Found the snakefile")
 
+    if args.pangolin_prep and args.update_web:
+        sys.stderr.write(f'Error: please specify only one of `--pangolin-prep` or `--update-web`')
+        sys.exit(-1)
+    
+    if not args.pangolin_prep and not args.update_web:
+        sys.stderr.write(f'Error: please specify either `--pangolin-prep` or `--update-web`')
+        sys.exit(-1)
+
     if args.pangolin_prep:
         if args.data:
             data_dir = os.path.join(cwd, args.data)
@@ -68,24 +81,12 @@ def main(sysargs = sys.argv[1:]):
     - metadata.csv
     - alignment.fasta
     - global.tree
-    - lineages.csv""")
+    - lineages.csv\n""")
                 sys.exit(-1)
         elif not args.data:
             sys.stderr.write(f'Error: please specify data directory')
             sys.exit(-1)
         num_taxa = args.num_taxa
-    elif args.update_web:
-        print("work in progress")
-        # config["metadata"]
-        # config["country_coordinates"]
-        # config["summary_figures_dir"]
-        # config["recall_file"]
-        # config["data_dir"]
-        # config["data_dir"],"lineages.metadata.csv"
-        # config["assignment_dir"]
-        # config["website_dir"]
-
-
 
     outdir = ''
     if args.outdir:
@@ -134,10 +135,57 @@ def main(sysargs = sys.argv[1:]):
         }
 
     # find the data
-    
+    if args.update_web:
+        country_coordinates = pkg_resources.resource_filename('cov_support', 'data/country_coordinates.csv')
+        config["country_coordinates"]
 
+        if args.assignment_dir:
+            assignment_dir = os.path.join(cwd, args.assignment_dir)
+            if not os.path.exists(assignment_dir):
+                sys.stderr.write(f'Error: cannot find directory {assignment_dir}')
+                sys.exit(-1)
+            else:
+                config["assignment_dir"] = assignment_dir
+        else:
+            sys.stderr.write(f'Error: please provide path to assignment repo')
+            sys.exit(-1)
 
+        if args.website_dir:
+            website_dir = os.path.join(cwd, args.website_dir)
+            if not os.path.exists(website_dir):
+                sys.stderr.write(f'Error: cannot find directory {website_dir}')
+                sys.exit(-1)
+            else:
+                config["website_dir"] = website_dir
+        else:
+            sys.stderr.write(f'Error: please provide path to website repo')
+            sys.exit(-1)
 
+        if args.data_dir:
+            data_dir = os.path.join(cwd, args.data_dir)
+            
+            if not os.path.exists(data_dir):
+                sys.stderr.write(f'Error: cannot find directory {data_dir}')
+                sys.exit(-1)
+            else:
+                config["data_dir"] = data_dir
+                config["summary_figures_dir"] = os.path.join("data_dir","summary_figures")
+                lineages = os.path.join(config["data_dir"],"lineages.metadata.csv")
+                recall_file = config["data_dir"],"lineage_recall_report.csv"            
+                if not os.path.exists(lineages) or not os.path.exists(recall_file):
+                    sys.stderr.write(f"""Error: cannot find files in {data_dir}.\nPlease provide path to:\n \
+    - lineage_recall_report.csv 
+    - lineages.metadata.csv\n""")
+                    sys.exit(-1)
+                else:
+                    config["lineages_metadata"] = lineages
+                    config["recall_file"] = recall_file
+        else:
+            sys.stderr.write(f'Error: please provide path to data repo')
+            sys.exit(-1)
+
+        # config["metadata"]
+        
     to_include = pkg_resources.resource_filename('cov_support', 'data/to_include.csv')
     config["to_include"] = to_include
 
