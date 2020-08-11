@@ -124,20 +124,20 @@ rule extract_representative_sequences:
             --metadata-out {output.metadata} 
         """
 
-rule mafft_representative_sequences:
-    input:
-        rules.extract_representative_sequences.output.representatives
-    threads: workflow.cores
-    params:
-        cores = workflow.cores
-    output:
-        os.path.join(config["outdir"] , "representative_sequences.aln.fasta")
-    shell:
-        "mafft --thread {params.cores} {input[0]:q} > {output[0]:q}"
+# rule mafft_representative_sequences:
+#     input:
+#         rules.extract_representative_sequences.output.representatives
+#     threads: workflow.cores
+#     params:
+#         cores = workflow.cores
+#     output:
+#         os.path.join(config["outdir"] , "representative_sequences.aln.fasta")
+#     shell:
+#         "mafft --thread {params.cores} {input[0]:q} > {output[0]:q}"
 
 rule anonymise_headers:
     input:
-        rules.mafft_representative_sequences.output
+        rules.extract_representative_sequences.output.representatives
     output:
         fasta = os.path.join(config["outdir"] , "anonymised.aln.fasta"),
         key = os.path.join(config["outdir"] , "tax_key.csv")
@@ -191,7 +191,7 @@ rule iqtree_representative_sequences:
 
 rule anonymise_headers_safe:
     input:
-        rules.mafft_representative_sequences.output
+        rules.extract_representative_sequences.output.representatives
     output:
         fasta = os.path.join(config["outdir"] , "anonymised.aln.safe.fasta"),
         key = os.path.join(config["outdir"] , "tax_key.safe.csv")

@@ -75,7 +75,16 @@ def main(sysargs = sys.argv[1:]):
             sys.exit(-1)
         num_taxa = args.num_taxa
     elif args.update_web:
-        
+        print("work in progress")
+        # config["metadata"]
+        # config["country_coordinates"]
+        # config["summary_figures_dir"]
+        # config["recall_file"]
+        # config["data_dir"]
+        # config["data_dir"],"lineages.metadata.csv"
+        # config["assignment_dir"]
+        # config["website_dir"]
+
 
 
     outdir = ''
