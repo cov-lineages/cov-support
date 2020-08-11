@@ -27,7 +27,7 @@ setup(name='cov-support',
       "cov_support/scripts/utils/parse_data.py",
       "cov_support/scripts/utils/class_defs.py",
       "cov_support/scripts/utils/time_functions.py",
-      "cov_support/scripts/utils/udpate_web_pages.py"],
+      "cov_support/scripts/update_web_pages.py"],
       install_requires=[
             "biopython>=1.70",
             "dendropy>=4.4.0",

@@ -26,14 +26,13 @@ def create_lineage_dict(lineage_csv):
     lineage_dict = collections.defaultdict(list)
 
     with open(lineage_csv,"r") as f:
-        for l in f:
-            l = l.rstrip("\n")
-            tokens = l.split(",")
-            taxon,lineage = tokens
-            if lineage != "lineage":
-                for i in range(len(lineage.split("."))):
-                    parents = ".".join(lineage.split(".")[:i+1])
-                    lineage_dict[parents].append((lineage, l))
+        reader = csv.DictReader(f)
+        for row in reader:
+            taxon = row["sequence_name"]
+            lineage = row["lineage"]
+            for i in range(len(lineage.split("."))):
+                parents = ".".join(lineage.split(".")[:i+1])
+                lineage_dict[parents].append((lineage, taxon))
     return lineage_dict
 
 def create_notes_dict(lineages_notes):
@@ -98,7 +97,7 @@ def create_lineage_and_assignment_pages(outfile, website_dir,assignment_dir, sum
                         os.mkdir(parent_directory)
                     
                     with open(os.path.join(parent_directory,f"{lineage}.metadata.csv"), "w") as fw:
-                        fw.write("GISAID ID,name,country,travel history,sample date,epiweek,lineage,representative\n")
+                        fw.write("name,lineage\n")
                         print(lineage)
                         for line in sorted(lineage_dict[lineage], key = lambda x : x[0]):
                             fw.write(line[1] + '\n')
