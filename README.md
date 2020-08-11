@@ -1,5 +1,40 @@
 # cov-support
 
+
+### Install cov-support
+
+1. Clone this repository and ``cd cov-support``
+2. ``conda env create -f environment.yml``
+3. ``conda activate cov-support``
+4. ``python setup.py install`` or ``pip install .``
+
+> Note: we recommend using cov-support in the conda environment specified in the ``environment.yml`` file as per the instructions above. If you can't use conda for some reason, dependency details can be found in the ``environment.yml`` file.
+
+
+### Check the install worked
+
+Type (in the cov-support environment):
+
+```
+cov-support
+```
+and you should see the help for cov-support printed.
+
+
+### Updating cov-support
+
+To update:
+
+1. ``conda activate cov-support``
+2. ``git pull`` \
+pulls the latest changes from github
+3. ``python setup.py install`` \
+re-installs cov-support
+4. ``conda env update -f environment.yml`` \
+updates the conda environment 
+
+
+
 ### Update website 
 
 ```
