@@ -22,6 +22,8 @@ cov-support --pangolin-prep \
 
 ### Full usage
 
+
+```
 usage: cov-support [-h] [-o OUTDIR] [-d DATA] [--pangolin-prep]
                    [--num-taxa NUM_TAXA] [--update-web]
                    [--website-dir WEBSITE_DIR]
@@ -55,3 +57,4 @@ optional arguments:
                         Number of threads
   --verbose             Print lots of stuff to screen
   -v, --version         show program's version number and exit
+  ```
