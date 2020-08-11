@@ -33,10 +33,10 @@ def main(sysargs = sys.argv[1:]):
     parser.add_argument('--update-web', action="store_true",help="Run website update pipeline",dest="update_web")    
     parser.add_argument('--website-dir', action="store",help="Path to website repo",dest="website_dir")    
     parser.add_argument('--assignment-dir', action="store",help="Path to assignment repo",dest="assignment_dir")    
+    parser.add_argument('--updated-metadata', action="store",help="Updated metadata file",dest="metadata")    
+    parser.add_argument('--lineage-descriptions', action="store",help="Updated descriptions file",dest="descriptions")    
 
     parser.add_argument('-n', '--dry-run', action='store_true',help="Go through the motions but don't actually run")
-    parser.add_argument('--tempdir',action="store",help="Specify where you want the temp stuff to go. Default: $TMPDIR")
-    parser.add_argument("--no-temp",action="store_true",help="Output all intermediate files, for dev purposes.")
     parser.add_argument('-t', '--threads', action='store',type=int,help="Number of threads")
     parser.add_argument("--verbose",action="store_true",help="Print lots of stuff to screen")
     parser.add_argument("-v","--version", action='version', version=f"pangolin {__version__}")
@@ -100,20 +100,6 @@ def main(sysargs = sys.argv[1:]):
     else:
         outdir = cwd
 
-    tempdir = ''
-    if args.tempdir:
-        to_be_dir = os.path.join(cwd, args.tempdir)
-        if not os.path.exists(to_be_dir):
-            os.mkdir(to_be_dir)
-        temporary_directory = tempfile.TemporaryDirectory(suffix=None, prefix=None, dir=to_be_dir)
-        tempdir = temporary_directory.name
-    else:
-        temporary_directory = tempfile.TemporaryDirectory(suffix=None, prefix=None, dir=None)
-        tempdir = temporary_directory.name
-    
-    if args.no_temp:
-        print(f"--no-temp: All intermediate files will be written to {outdir}")
-        tempdir = outdir
 
     # how many threads to pass
     if args.threads:
@@ -123,21 +109,20 @@ def main(sysargs = sys.argv[1:]):
 
     print("Number of threads is", threads)
 
-    config = {
-        "lineages":lineages,
-        "metadata":metadata,
-        "fasta":alignment,
-        "global_tree":tree,
-        
-        "outdir":outdir,
-        "tempdir":tempdir,
-        "num_taxa":num_taxa
+    config = {        
+        "outdir":outdir
         }
 
+    if args.pangolin_prep:
+        config["lineages"]=lineages
+        config["metadata"]=metadata
+        config["fasta"]=alignment
+        config["global_tree"]=tree
+        config["num_taxa"]=num_taxa
     # find the data
     if args.update_web:
         country_coordinates = pkg_resources.resource_filename('cov_support', 'data/country_coordinates.csv')
-        config["country_coordinates"]
+        config["country_coordinates"] = country_coordinates
 
         if args.assignment_dir:
             assignment_dir = os.path.join(cwd, args.assignment_dir)
@@ -161,17 +146,42 @@ def main(sysargs = sys.argv[1:]):
             sys.stderr.write(f'Error: please provide path to website repo')
             sys.exit(-1)
 
-        if args.data_dir:
-            data_dir = os.path.join(cwd, args.data_dir)
+        if args.metadata:
+            metadata = os.path.join(cwd, args.metadata)
+            if not os.path.exists(metadata):
+                sys.stderr.write(f'Error: cannot find metadata at {metadata}')
+                sys.exit(-1)
+            else:
+                config["metadata"] = metadata
+        else:
+            sys.stderr.write(f'Error: please provide updated metadata')
+            sys.exit(-1)
+
+        if args.descriptions:
+            descriptions = os.path.join(cwd, args.descriptions)
+            if not os.path.exists(descriptions):
+                sys.stderr.write(f'Error: cannot find descriptions at {descriptions}')
+                sys.exit(-1)
+            else:
+                config["descriptions"] = descriptions
+        else:
+            sys.stderr.write(f'Error: please provide descriptions')
+            sys.exit(-1)
+
+        if args.data:
+            data_dir = os.path.join(cwd, args.data)
             
             if not os.path.exists(data_dir):
                 sys.stderr.write(f'Error: cannot find directory {data_dir}')
                 sys.exit(-1)
             else:
                 config["data_dir"] = data_dir
-                config["summary_figures_dir"] = os.path.join("data_dir","summary_figures")
+                summary_figures = os.path.join("data_dir","summary_figures")
+                if not os.path.exists(summary_figures):
+                    os.mkdir(summary_figures)
+                config["summary_figures_dir"] = summary_figures
                 lineages = os.path.join(config["data_dir"],"lineages.metadata.csv")
-                recall_file = config["data_dir"],"lineage_recall_report.csv"            
+                recall_file = os.path.join(config["data_dir"],"lineage_recall_report.csv")            
                 if not os.path.exists(lineages) or not os.path.exists(recall_file):
                     sys.stderr.write(f"""Error: cannot find files in {data_dir}.\nPlease provide path to:\n \
     - lineage_recall_report.csv 
@@ -183,8 +193,6 @@ def main(sysargs = sys.argv[1:]):
         else:
             sys.stderr.write(f'Error: please provide path to data repo')
             sys.exit(-1)
-
-        # config["metadata"]
         
     to_include = pkg_resources.resource_filename('cov_support', 'data/to_include.csv')
     config["to_include"] = to_include
@@ -198,7 +206,7 @@ def main(sysargs = sys.argv[1:]):
     # run subtyping
     status = snakemake.snakemake(snakefile, printshellcmds=True,
                                  dryrun=args.dry_run, forceall=True,force_incomplete=True,
-                                 config=config, cores=threads,lock=False,quiet=quiet_mode,workdir=tempdir
+                                 config=config, cores=threads,lock=False,quiet=quiet_mode
                                  )
 
     if status: # translate "success" into shell exit code of 0
