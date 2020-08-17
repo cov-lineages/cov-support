@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #For each SARS-CoV-2 global lineage, produces:
 #A) A global map with sequence distribution labelled as points
 #B) A bar chart showing the number of sequences from each country
