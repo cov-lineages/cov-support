@@ -7,9 +7,10 @@ from epiweeks import Week,Year
 import csv
 import datetime as dt
 
-classes = imp.load_source("class_defs", 'utils/class_defs.py')
-time = imp.load_source("time_functions", "utils/time_functions.py")
-
+# classes = imp.load_source("class_defs", 'utils/class_defs.py')
+# time = imp.load_source("time_functions", "utils/time_functions.py")
+import class_defs as classes
+import time_functions as time
 
 def parse_travel_history(lin_obj_dict, tax_dict, metadata):
 
@@ -61,10 +62,10 @@ def make_objects(metadata_file):
         data = [r for r in reader]
         for seq in data:
                        
-            tax_name = seq["name"]
+            tax_name = seq["sequence_name"]
             country = seq["country"]
-            date = seq["sample date"]
-            epiweek = seq["epiweek"]
+            date = seq["sample_date"]
+            epiweek = seq["epi_week"]
             lin_string = seq["lineage"]
 
             metadata = [country, date, epiweek]
@@ -98,20 +99,10 @@ def get_recall_value(lin_obj_dict, recall_file):
     count = 0
 
     with open(recall_file,"r") as f:
-        next(f)
-        for l in f:
-            l = l.rstrip("\n").lstrip(" ")
-            if l == "":
-                break
-            else:
-                toks = l.strip("\n").split()
-            
-                
-                name = toks[0]
-                recall_value = toks[1]
-
-                # if name in lin_obj_dict.keys():
-                lin_obj_dict[name].recall_value = recall_value
+        reader = csv.DictReader(f)
+        for row in reader:
+            if row["lineage"] in lin_obj_dict:
+                lin_obj_dict[row["lineage"]].recall_value = row["recall"]
 
     return lin_obj_dict
 

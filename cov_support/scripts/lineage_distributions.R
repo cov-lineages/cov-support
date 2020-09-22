@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #For each SARS-CoV-2 global lineage, produces:
 #A) A global map with sequence distribution labelled as points
 #B) A bar chart showing the number of sequences from each country
@@ -40,21 +42,22 @@ countryConversion <- function(locations, conversion) { #Takes a set of locations
   return(locations)}
 
 #Import the cluster metadata
-clusters <- read.csv(args[1])
+clusters <- read.csv(args[1], stringsAsFactors = FALSE)
 
 #Import the country latitude longitudes and continents
-countryLatitudeLongitude <- read.csv(args[2])
+countryLatitudeLongitude <- read.csv(args[2], stringsAsFactors = FALSE)
 
 #Replace country names in metadata that do not match those in the latitude longitude table
 clusters$country[which(clusters$country == "United_States")] <- "USA"
 clusters$country[which(clusters$country == "ISRAEL")] <- "Israel"
+clusters$country[which(clusters$country == "North_Macedonia")] <- "Macedonia"
 clusters$country[grep("Romania", clusters$country)] <- "Romania"
 
 #Extract the unique lineages
 uniqueLineages <- unique(clusters$lineage)
 
 #Convert the collection dates to dates
-clusters$Date <- as.Date(clusters$sample_date)
+clusters$Date <- as.Date(clusters$sample.date)
 
 #Plot the world map onto which lineage locations will be plotted
 worldMap <- map_data('world')
