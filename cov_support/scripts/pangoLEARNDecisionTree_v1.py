@@ -8,8 +8,8 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from datetime import datetime
 import joblib
 import sys
+import os
 from sklearn.model_selection import cross_val_score
-
 
 # file with lineage assignments
 lineage_file = sys.argv[1]
@@ -18,20 +18,60 @@ sequence_file = sys.argv[2]
 # how much of the data will be used for testing, instead of training
 testing_percentage = float(sys.argv[3])
 
+#location of reference seq
+dirname = os.path.dirname(__file__)
+# the path to the reference file. 
+# This reference sequence must be the same as is used in the pangolearn script!!
+referenceFile = os.path.join(dirname, '../data/reference.fasta')
+
 # data storage
 dataList = []
 # dict for lookup efficiency
 indiciesToKeep = dict()
 
+referenceId = "Wuhan/WH04/2020"
+referenceSeq = ""
+
+idToLineage = dict()
+idToSeq = dict()
+
 # function for handling weird sequence characters
-def clean(x):
+def clean(x, loc):
     if x == 'A' or x == 'C' or x == 'T' or x == '-':
     	return x
-    return 'N'
+
+    # otherwise return value from reference
+    return referenceSeq[loc]
+
+def findReferenceSeq():
+	with open(referenceFile) as f:
+		currentSeq = ""
+
+		for line in f:
+			if ">" not in line:
+				currentSeq = currentSeq + line.strip()
+
+	f.close()
+	return currentSeq
+
+
+def getDataLine(seqId, seq):
+	dataLine = []
+	dataLine.append(idToLineage[seqId])
+
+	# for each character in the sequence
+	for index in range(len(seq)):
+		# get the one hot encoding and append it to the line
+		dataLine.append(clean(seq[index], index))
+	
+	return dataLine
+
 
 def readInAndFormatData():
-	idToLineage = dict()
-	idToSeq = dict()
+
+	# add the data line for the reference seq
+	idToLineage[referenceId] = "A"
+	dataList.append(getDataLine(referenceId, referenceSeq))
 
 	# create a dictionary of sequence ids to their assigned lineages
 	with open(lineage_file, 'r') as f:
@@ -60,23 +100,15 @@ def readInAndFormatData():
 						#idToSeq[currentId] = currentSeq
 
 						key = currentId
-						dataLine = []
 
 						# add the lineage
 						if key in idToLineage:
-
-							dataLine.append(idToLineage[key])
-
 							if "lineage" in line:
 								# this is the header line. don't do anything.
 								print("skipping header")
 							else:
-								# for each character in the sequence
-								for char in currentSeq:
-									# get the one hot encoding and append it to the line
-									dataLine.append(clean(char))
 								# add the line ot the dataList
-								dataList.append(dataLine)
+								dataList.append(getDataLine(key, currentSeq))
 						else:
 							print("Unable to find the lineage classification for: " + key)
 
@@ -92,23 +124,16 @@ def readInAndFormatData():
 		# one left at the end of the file
 		if currentId and currentSeq:
 			key = currentId
-			dataLine = []
 
 			# add the lineage
 			if key in idToLineage:
-
-				dataLine.append(idToLineage[key])
 
 				if "lineage" in line:
 					# this is the header line. don't do anything.
 					print("skipping header")
 				else:
-					# for each character in the sequence
-					for char in currentSeq:
-						# get the one hot encoding and append it to the line
-						dataLine.append(clean(char))
 					# add the line ot the dataList
-					dataList.append(dataLine)
+					dataList.append(getDataLine(key, currentSeq))
 			else:
 				print("Unable to find the lineage classification for: " + key)
 
@@ -171,6 +196,8 @@ def removeOtherIndices(indiciesToKeep):
 
 print("reading in data " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), flush=True);
 
+referenceSeq = findReferenceSeq()
+
 readInAndFormatData()
 
 print("processing snps, formatting data " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), flush=True);
@@ -188,7 +215,7 @@ print("setting up training " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), fl
 pima = pd.DataFrame(dataList, columns=headers)
 
 # nucleotide symbols which can appear
-categories = ['A', 'C', 'G', 'T', 'N', '-']
+categories = ['A', 'C', 'G', 'T', '-']
 
 # one hot encoding of all headers other than the first which is the lineage
 dummyHeaders = headers[1:]
