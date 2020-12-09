@@ -57,7 +57,7 @@ def findReferenceSeq():
 
 def getDataLine(seqId, seq):
 	dataLine = []
-	dataLine.append(idToLineage[seqId])
+	dataLine.append(seqId)
 
 	# for each character in the sequence
 	for index in range(len(seq)):
@@ -193,6 +193,64 @@ def removeOtherIndices(indiciesToKeep):
 	# return
 	return finalList
 
+def allEqual(list):
+		entries = dict()
+
+		for i in list:
+			if i not in entries:
+				entries[i] = True
+
+		return len(entries) == 1
+
+def removeAmbiguous():
+	finalIdList = set()
+	lineMap = dict()
+	idMap = dict()
+
+	for line in dataList:
+		keyString = ",".join(line[1:])
+
+		if keyString not in lineMap:
+			lineMap[keyString] = []
+			idMap[keyString] = []
+
+		lineMap[keyString].append(idToLineage[line[0]])
+		idMap[keyString].append(line[0])
+
+	for key in lineMap:
+		if not allEqual(lineMap[key]):
+
+			lineageToCounts = dict()
+
+
+			aLineage = False
+			# find most common lineage
+			for lineage in lineMap[key]:
+				if lineage not in lineageToCounts:
+					lineageToCounts[lineage] = 0
+
+				lineageToCounts[lineage] = lineageToCounts[lineage] + 1
+				aLineage = lineage
+
+			m = aLineage
+			for lineage in lineageToCounts:
+				if lineageToCounts[lineage] > lineageToCounts[m]:
+					m = lineage
+
+
+			for i in idMap[key]:
+				if m != idToLineage[i]:
+					finalIdList.add(i)
+
+	newList = []
+
+	for line in dataList:
+		if line[0] not in finalIdList:
+			line[0] = idToLineage[line[0]]
+			newList.append(line);
+
+	return newList;
+
 
 print("reading in data " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), flush=True);
 
@@ -205,6 +263,14 @@ print("processing snps, formatting data " + datetime.now().strftime("%m/%d/%Y, %
 findColumnsWithoutSNPs()
 
 dataList = removeOtherIndices(indiciesToKeep)
+
+print("# sequences before blacklisting")
+print(len(dataList))
+
+dataList = removeAmbiguous()
+
+print("# sequences after blacklisting")
+print(len(dataList))
 
 # headers are the original genome locations
 headers = list(indiciesToKeep.keys())
@@ -233,6 +299,7 @@ pima = pd.get_dummies(pima, columns=dummyHeaders)
 pima.drop(pima.tail(len(categories)).index, inplace=True)
 
 feature_cols = list(pima)
+print(feature_cols)
 
 # remove the last column from the data frame. This is because we are trying to predict these values.
 h = feature_cols.pop(0)
@@ -274,8 +341,8 @@ print(metrics.classification_report(y_test, y_pred, digits=3))
 
 # save the model files to compressed joblib files
 # using joblib instead of pickle because these large files need to be compressed
-joblib.dump(dt, "pangolearnDecisionTree_v1.joblib", compress=9)
-joblib.dump(headers, "pangolearnDecisionTree_v1_headers.joblib", compress=9)
+joblib.dump(dt,  "pangolearnDecisionTree_v1.joblib", compress=9)
+joblib.dump(headers,  "pangolearnDecisionTree_v1_headers.joblib", compress=9)
 
 print("model files created", flush=True)
 
