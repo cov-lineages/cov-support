@@ -22,7 +22,7 @@ testing_percentage = float(sys.argv[3])
 dirname = os.path.dirname(__file__)
 # the path to the reference file. 
 # This reference sequence must be the same as is used in the pangolearn script!!
-referenceFile = os.path.join(dirname, '../data/reference.fasta')
+referenceFile = os.path.join(dirname, '~/workspace/pangolin/pangolin/data/reference.fasta')
 
 # data storage
 dataList = []
@@ -37,11 +37,16 @@ idToSeq = dict()
 
 # function for handling weird sequence characters
 def clean(x, loc):
-    if x == 'A' or x == 'C' or x == 'T' or x == '-':
-    	return x
+	x = x.upper()
+	
+	if x == 'T' or x == 'A' or x == 'G' or x == 'C' or x == '-':
+		return x
 
-    # otherwise return value from reference
-    return referenceSeq[loc]
+	if x == 'U':
+		return 'T'
+
+	# otherwise return value from reference
+	return referenceSeq[loc]
 
 def findReferenceSeq():
 	with open(referenceFile) as f:
@@ -246,6 +251,7 @@ def removeAmbiguous():
 
 	for line in dataList:
 		if line[0] not in finalIdList:
+			print(line[0])
 			line[0] = idToLineage[line[0]]
 			newList.append(line);
 
@@ -311,6 +317,8 @@ X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=testing_percentage,
 
 print("training " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), flush=True);
 
+joblib.dump(headers,  "pangolearnDecisionTree_v1_headers.joblib", compress=9)
+
 # instantiate the random forest with 1000 trees
 dt = DecisionTreeClassifier()
 
@@ -342,7 +350,6 @@ print(metrics.classification_report(y_test, y_pred, digits=3))
 # save the model files to compressed joblib files
 # using joblib instead of pickle because these large files need to be compressed
 joblib.dump(dt,  "pangolearnDecisionTree_v1.joblib", compress=9)
-joblib.dump(headers,  "pangolearnDecisionTree_v1_headers.joblib", compress=9)
 
 print("model files created", flush=True)
 
