@@ -10,19 +10,18 @@ import joblib
 import sys
 import os
 from sklearn.model_selection import cross_val_score
+from Bio import SeqIO
 
 # file with lineage assignments
 lineage_file = sys.argv[1]
 # file with sequences
 sequence_file = sys.argv[2]
 # how much of the data will be used for testing, instead of training
-testing_percentage = float(sys.argv[3])
+testing_percentage = 0.00000001
 
-#location of reference seq
-dirname = os.path.dirname(__file__)
 # the path to the reference file. 
 # This reference sequence must be the same as is used in the pangolearn script!!
-referenceFile = os.path.join(dirname, '~/workspace/pangolin/pangolin/data/reference.fasta')
+referenceFile = sys.argv[3]
 
 # data storage
 dataList = []
@@ -34,6 +33,10 @@ referenceSeq = ""
 
 idToLineage = dict()
 idToSeq = dict()
+
+mustKeepIds = ["Wuhan/WH04/2020", "Wuhan/WHU01/2020", "Italy/ABR-IZSGC-TE5166/2020", "Germany/BY-MVP-V2010837/2020", "Spain/VC-IBV-98006461/2020"]
+mustKeepLineages = ["A", "B", "B.1", "B.1.1", "B.1.177"]
+
 
 # function for handling weird sequence characters
 def clean(x, loc):
@@ -64,10 +67,13 @@ def getDataLine(seqId, seq):
 	dataLine = []
 	dataLine.append(seqId)
 
+	newSeq = ""
+
 	# for each character in the sequence
 	for index in range(len(seq)):
-		# get the one hot encoding and append it to the line
-		dataLine.append(clean(seq[index], index))
+		newSeq = newSeq + clean(seq[index], index)
+
+	dataLine.append(newSeq)
 	
 	return dataLine
 
@@ -90,72 +96,29 @@ def readInAndFormatData():
 	# close the file
 	f.close()
 
-	# create a dictionary of sequence ids to their assosciated sequence strings
-	with open(sequence_file) as f:
-		currentId = False
-		currentSeq = ""
+	seq_dict = {rec.id : rec.seq for rec in SeqIO.parse(sequence_file, "fasta")}
 
-		for line in f:
-			if "taxon,lineage" not in line:
-				line = line.strip()
+	print("files read in, now processing")
 
-				if ">" in line:
-					# starting new entry, saving the old one
-					if currentId and currentSeq:
-						#idToSeq[currentId] = currentSeq
-
-						key = currentId
-
-						# add the lineage
-						if key in idToLineage:
-							if "lineage" in line:
-								# this is the header line. don't do anything.
-								print("skipping header")
-							else:
-								# add the line ot the dataList
-								dataList.append(getDataLine(key, currentSeq))
-						else:
-							print("Unable to find the lineage classification for: " + key)
-
-					# the new id
-					currentId = line[1:]
-					# clearing the sequence
-					currentSeq = ""
-
-				else:
-					# incrementally collecting the sequence
-					currentSeq = currentSeq + line
-
-		# one left at the end of the file
-		if currentId and currentSeq:
-			key = currentId
-
-			# add the lineage
-			if key in idToLineage:
-
-				if "lineage" in line:
-					# this is the header line. don't do anything.
-					print("skipping header")
-				else:
-					# add the line ot the dataList
-					dataList.append(getDataLine(key, currentSeq))
-			else:
-				print("Unable to find the lineage classification for: " + key)
-
-	# close the file
-	f.close()
+	for key in seq_dict.keys():
+		if key in idToLineage:
+			dataList.append(getDataLine(key, seq_dict[key]))
+		else:
+			print("unable to find the lineage classification for: " + key)
 
 
 # find columns in the data list which always have the same value
 def findColumnsWithoutSNPs():
+
 	# for each index in the length of each sequence
-	for index in range(len(dataList[0])):
+	for index in range(len(dataList[0][1])):
 		keep = False
 
 		# loop through all lines
 		for line in dataList:
+
 			# if there is a difference somewhere, then we want to keep it
-			if index == 0 or not dataList[0][index] == line[index]:
+			if dataList[0][1][index] != line[1][index] or index == 0:
 				keep = True
 				break
 
@@ -168,6 +131,7 @@ def findColumnsWithoutSNPs():
 # these columns won't be relevant for a logistic regression which is trying to use
 # differences between sequences to assign lineages
 def removeOtherIndices(indiciesToKeep):
+
 	# instantiate the final list
 	finalList = []
 
@@ -181,6 +145,7 @@ def removeOtherIndices(indiciesToKeep):
 		line = dataList.pop(0)
 		seqId = line.pop(0)
 
+		line = line[0]
 		# initialize the finalLine
 		finalLine = []
 
@@ -190,7 +155,7 @@ def removeOtherIndices(indiciesToKeep):
 				finalLine.append(seqId)
 			else:
 				# otherwise keep everything at the indices in indiciesToKeep
-				finalLine.extend(line[index])
+				finalLine.append(line[index])
 
 		# save the finalLine to the finalList
 		finalList.append(finalLine)
@@ -208,7 +173,7 @@ def allEqual(list):
 		return len(entries) == 1
 
 def removeAmbiguous():
-	finalIdList = set()
+	idsToRemove = set()
 	lineMap = dict()
 	idMap = dict()
 
@@ -225,32 +190,47 @@ def removeAmbiguous():
 	for key in lineMap:
 		if not allEqual(lineMap[key]):
 
-			lineageToCounts = dict()
+			skipRest = False
 
-
-			aLineage = False
-			# find most common lineage
+			# see if any protected lineages are contained in the set, if so keep those ids
 			for lineage in lineMap[key]:
-				if lineage not in lineageToCounts:
-					lineageToCounts[lineage] = 0
+				if lineage in mustKeepLineages:
+					skipRest = True
 
-				lineageToCounts[lineage] = lineageToCounts[lineage] + 1
-				aLineage = lineage
+					for i in idMap[key]:
+						if lineage != idToLineage[i] and i not in mustKeepIds:
+							idsToRemove.add(i)
 
-			m = aLineage
-			for lineage in lineageToCounts:
-				if lineageToCounts[lineage] > lineageToCounts[m]:
-					m = lineage
+			# none of the lineages are protected, fire at will
+			if not skipRest:
+
+				lineageToCounts = dict()
+
+				aLineage = False
+				# find most common lineage
+				for lineage in lineMap[key]:
+					if lineage not in lineageToCounts:
+						lineageToCounts[lineage] = 0
+
+					lineageToCounts[lineage] = lineageToCounts[lineage] + 1
+					aLineage = lineage
+
+				m = aLineage
+				for lineage in lineageToCounts:
+					if lineageToCounts[lineage] > lineageToCounts[m]:
+						m = lineage
 
 
-			for i in idMap[key]:
-				if m != idToLineage[i]:
-					finalIdList.add(i)
+				for i in idMap[key]:
+					if m != idToLineage[i]:
+						idsToRemove.add(i)
 
 	newList = []
 
+	print("keeping indicies:")
+
 	for line in dataList:
-		if line[0] not in finalIdList:
+		if line[0] not in idsToRemove:
 			print(line[0])
 			line[0] = idToLineage[line[0]]
 			newList.append(line);
@@ -317,7 +297,7 @@ X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=testing_percentage,
 
 print("training " + datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), flush=True);
 
-joblib.dump(headers,  "pangolearnDecisionTree_v1_headers.joblib", compress=9)
+joblib.dump(headers,  "decisionTreeHeaders_v1.joblib", compress=9)
 
 # instantiate the random forest with 1000 trees
 dt = DecisionTreeClassifier()
@@ -349,7 +329,7 @@ print(metrics.classification_report(y_test, y_pred, digits=3))
 
 # save the model files to compressed joblib files
 # using joblib instead of pickle because these large files need to be compressed
-joblib.dump(dt,  "pangolearnDecisionTree_v1.joblib", compress=9)
+joblib.dump(dt,  "decisionTree_v1.joblib", compress=9)
 
 print("model files created", flush=True)
 
